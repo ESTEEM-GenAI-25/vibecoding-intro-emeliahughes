@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GEN AI & Product Studio — Course Hub</title>
+  <meta name="description" content="Centralized hub for assignments, readings, deadlines, and materials for GEN AI & Product Studio." />
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --bg-grad-top:#ffffff;
+      --bg-grad-bottom:#f1f3f5;
+      --card:#ffffff;
+      --text:#111827; /* slate-900 */
+      --muted:#4b5563; /* gray-600 */
+      --accent:#2563eb; /* blue-600 */
+      --accent-contrast:#ffffff;
+      --green:#16a34a; /* success */
+      --amber:#d97706; /* warning */
+      --gray:#6b7280; /* neutral */
+      --border:#e5e7eb;
+      --focus:#1d4ed8;
+      --shadow: 0 10px 25px rgba(0,0,0,0.06);
+      --radius: 16px;
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg-grad-top), var(--bg-grad-bottom));
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
+
+    /* Skip link */
+    .skip-link { position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { left: 1rem; top: 1rem; width: auto; height: auto; padding: .5rem .75rem; background: #000; color: #fff; z-index: 50; border-radius: .25rem; }
+
+    header {
+      display: grid; gap: .75rem; align-items: start; margin: 1rem 0 1.25rem;
+    }
+    .title-row { display: grid; grid-template-columns: 1fr auto; gap: .75rem; align-items: center; }
+    h1 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0; }
+    .term { color: var(--muted); font-weight: 600; }
+
+    .banner { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: .75rem 1rem; display: flex; align-items: center; gap: .75rem; box-shadow: var(--shadow); }
+    .banner strong { margin-right: .25rem; }
+
+    .top-grid {
+      display: grid; grid-template-columns: 1.2fr .8fr; gap: 1rem; margin-top: 1rem;
+    }
+    @media (max-width: 900px){ .top-grid { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card h2 { font-size: 1.125rem; margin: 0 0 .25rem; }
+    .card .head { padding: 1rem 1rem .5rem; border-bottom: 1px solid var(--border); }
+    .card .body { padding: 1rem; }
+
+    /* Tabs */
+    .tabs { margin-top: 1rem; }
+    .tablist { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .tablist button { appearance: none; border: 1px solid var(--border); background: var(--card); padding: .5rem .9rem; border-radius: 999px; cursor: pointer; font-weight: 600; }
+    .tablist button[aria-selected="true"] { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+    .tabpanel { display: none; }
+    .tabpanel[aria-hidden="false"] { display: block; }
+
+    /* Lists */
+    .list { display: grid; gap: .75rem; }
+    .row { display: grid; gap: .5rem; padding: .75rem; border: 1px solid var(--border); border-radius: .75rem; background: #fff; }
+    .row h3 { margin: 0; font-size: 1rem; }
+    .meta { color: var(--muted); font-size: .9rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+    .tags { display: inline-flex; gap: .35rem; flex-wrap: wrap; }
+    .badge { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .5rem; border-radius: 999px; font-size: .8rem; border: 1px solid var(--border); }
+    .badge.green { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+    .badge.amber { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+    .badge.gray { background: #f3f4f6; border-color: #e5e7eb; color: #374151; }
+
+    /* Controls */
+    .controls { display: grid; gap: .5rem; grid-template-columns: 1fr auto auto; align-items: center; }
+    @media (max-width: 700px){ .controls { grid-template-columns: 1fr; } }
+    .controls input[type="search"] { padding: .55rem .7rem; border: 1px solid var(--border); border-radius: .5rem; font-size: .95rem; }
+    .controls select, .controls button, .controls details { padding: .5rem .6rem; border: 1px solid var(--border); border-radius: .5rem; background: #fff; font-size: .95rem; }
+    .controls details summary { list-style: none; cursor: pointer; }
+
+    /* Progress */
+    .progress-wrap { display:flex; flex-direction: column; gap:.5rem; }
+    .progress-bar { width: 100%; height: 12px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+    .progress-bar > div { height: 100%; background: var(--green); width: 0%; transition: width .3s ease; }
+    .progress-text { font-size: .9rem; color: var(--muted); }
+
+    /* Footer */
+    footer { margin: 2rem 0 3rem; color: var(--muted); font-size: .95rem; }
+    footer a { color: var(--accent); }
+
+    /* Utilities */
+    .sr-only { position: absolute; width: 1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    @media (max-width: 700px){ .grid-2 { grid-template-columns: 1fr; } }
+
+    .pill { display:inline-block; padding:.2rem .5rem; border-radius:999px; border:1px solid var(--border); background:#fff; font-size:.8rem; }
+
+    /* Focus outlines */
+    :focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="container" role="application" aria-label="Course website application shell">
+    <header>
+      <div class="title-row" aria-describedby="course-subtitle">
+        <h1 id="course-title">GEN AI &amp; Product Studio</h1>
+        <div class="term" id="course-term">Fall 2025</div>
+      </div>
+      <p id="course-subtitle" class="term">Central hub for assignments, readings, deadlines, and materials.</p>
+
+      <div class="banner" role="region" aria-label="Announcements">
+        <span aria-hidden="true" title="Info">📢</span>
+        <div>
+          <strong>Announcement:</strong>
+          <span id="announcement-text">Welcome to the course hub! Week 3 slides and Assignment 2 are now posted.</span>
+        </div>
+      </div>
+
+      <div class="top-grid" aria-label="At-a-glance">
+        <section class="card" aria-labelledby="deadlines-head">
+          <div class="head"><h2 id="deadlines-head">Upcoming deadlines (Top 3)</h2></div>
+          <div class="body">
+            <ol id="upcoming-list" class="list" aria-live="polite"></ol>
+            <div class="grid-2" style="margin-top:.5rem; align-items:center;">
+              <button id="download-ics" aria-label="Download iCal file of all deadlines">Export All Deadlines (.ics)</button>
+              <small class="progress-text">Time zone shown: <span id="tz"></span></small>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="progress-head">
+          <div class="head"><h2 id="progress-head">Course progress</h2></div>
+          <div class="body">
+            <div class="progress-wrap">
+              <div aria-hidden="true" class="progress-bar" title="Progress toward completing assignments"><div id="progress-fill"></div></div>
+              <div class="progress-text"><span id="progress-text">0%</span> of assignments completed</div>
+              <div class="meta" id="progress-meta"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <nav class="tabs" aria-label="Primary Tabs">
+        <div role="tablist" aria-label="Sections" class="tablist">
+          <button role="tab" id="tab-overview" aria-selected="true" aria-controls="panel-overview">Overview</button>
+          <button role="tab" id="tab-assignments" aria-selected="false" aria-controls="panel-assignments">Assignments</button>
+          <button role="tab" id="tab-readings" aria-selected="false" aria-controls="panel-readings">Readings</button>
+          <button role="tab" id="tab-materials" aria-selected="false" aria-controls="panel-materials">Materials</button>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <!-- Overview Panel -->
+      <section id="panel-overview" class="tabpanel" role="tabpanel" aria-labelledby="tab-overview" aria-hidden="false">
+        <div class="card" style="margin-top:1rem;">
+          <div class="head"><h2>Weekly events</h2></div>
+          <div class="body">
+            <ul id="events-list" class="list" aria-live="polite"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assignments Panel -->
+      <section id="panel-assignments" class="tabpanel" role="tabpanel" aria-labelledby="tab-assignments" aria-hidden="true">
+        <div class="card" style="margin-top:1rem;">
+          <div class="head"><h2>Assignments</h2></div>
+          <div class="body">
+            <div class="controls" aria-label="Assignment controls">
+              <label class="sr-only" for="search-assignments">Search assignments</label>
+              <input id="search-assignments" type="search" placeholder="Search by title or description" aria-describedby="assignment-count" />
+
+              <details id="filter-tags">
+                <summary aria-label="Filter by tags">Filter: <span id="active-tag-count" class="pill">0 tags</span></summary>
+                <div id="tag-options" style="margin-top:.5rem; display:flex; gap:.5rem; flex-wrap:wrap;"></div>
+              </details>
+
+              <label class="sr-only" for="sort-assignments">Sort assignments</label>
+              <select id="sort-assignments" aria-label="Sort assignments">
+                <option value="due">Sort: Due date</option>
+                <option value="title">Sort: Title</option>
+                <option value="weight">Sort: Weight</option>
+                <option value="status">Sort: Status</option>
+              </select>
+            </div>
+
+            <div id="assignment-count" class="meta" style="margin:.5rem 0;"></div>
+            <ul id="assignments-list" class="list" aria-live="polite"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Readings Panel -->
+      <section id="panel-readings" class="tabpanel" role="tabpanel" aria-labelledby="tab-readings" aria-hidden="true">
+        <div class="card" style="margin-top:1rem;">
+          <div class="head"><h2>Readings</h2></div>
+          <div class="body">
+            <div class="controls">
+              <label class="sr-only" for="search-readings">Search readings</label>
+              <input id="search-readings" type="search" placeholder="Search by title or tag" />
+
+              <label class="sr-only" for="sort-readings">Sort readings</label>
+              <select id="sort-readings">
+                <option value="week">Sort: Week</option>
+                <option value="title">Sort: Title</option>
+                <option value="length">Sort: Length</option>
+              </select>
+            </div>
+            <ul id="readings-list" class="list" aria-live="polite"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Materials Panel -->
+      <section id="panel-materials" class="tabpanel" role="tabpanel" aria-labelledby="tab-materials" aria-hidden="true">
+        <div class="card" style="margin-top:1rem;">
+          <div class="head"><h2>Materials</h2></div>
+          <div class="body">
+            <ul id="materials-list" class="list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer aria-label="Footer">
+      <hr style="border:none;border-top:1px solid var(--border); margin:2rem 0;" />
+      <div class="grid-2">
+        <div>
+          <strong>Contact</strong><br/>
+          <span>Instructor: <a href="mailto:instructor@example.edu">instructor@example.edu</a></span><br/>
+          <span>Office Hours: Thu 3–5pm (ET)</span>
+        </div>
+        <div>
+          <strong>Policies & Accessibility</strong><br/>
+          <a href="#" aria-label="Link to syllabus policies (opens in this tab)">Syllabus Policies</a> ·
+          <a href="#" aria-label="Accessibility statement (opens in this tab)">Accessibility</a> ·
+          <a href="#" aria-label="Privacy notice (opens in this tab)">Privacy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ======= Data (Edit this section for your course) =======
+    const COURSE = {
+      title: 'GEN AI & Product Studio',
+      term: 'Fall 2025'
+    };
+
+    /** Assignments schema
+     * id: string, title: string, due: 'YYYY-MM-DDTHH:mm', weight: number (percent),
+     * tags: string[], description: string, status: 'not-started'|'in-progress'|'submitted',
+     * location?: string, link?: string
+     */
+    const ASSIGNMENTS = [
+      { id:'a1', title:'Assignment 1: Prompt Patterns Mini-Report', due:'2025-09-15T23:59', weight:10, tags:['writing','prompting'], status:'in-progress', description:'Analyze 3 prompting patterns on a small task; report findings.' },
+      { id:'a2', title:'Assignment 2: Vibe Coding PRD', due:'2025-09-29T23:59', weight:15, tags:['product','PRD'], status:'not-started', description:'Draft a one-page PRD for an LLM-powered product using vibe coding.' },
+      { id:'a3', title:'Assignment 3: Prototype Demo', due:'2025-10-20T23:59', weight:25, tags:['prototype','coding'], status:'not-started', description:'Ship a clickable demo (no-code or code) demonstrating your core flow.' },
+      { id:'a4', title:'Assignment 4: User Study Plan', due:'2025-11-03T23:59', weight:15, tags:['research','UX'], status:'not-started', description:'Design a lightweight evaluation plan with tasks, metrics, and risks.' },
+      { id:'a5', title:'Final Project: Report & Demo', due:'2025-12-08T23:59', weight:35, tags:['capstone','presentation'], status:'not-started', description:'Final deliverables: polished demo, report, and short presentation.' }
+    ];
+
+    /** Readings schema
+     * id, title, type ('paper'|'article'|'video'), length (min pages or minutes), week (number),
+     * tags: string[], link: string
+     */
+    const READINGS = [
+      { id:'r1', title:'LLMs: A Primer', type:'article', length:12, week:1, tags:['overview'], link:'#' },
+      { id:'r2', title:'Prompting Patterns & Anti-Patterns', type:'article', length:10, week:2, tags:['prompting'], link:'#' },
+      { id:'r3', title:'Rapid Prototyping with APIs', type:'video', length:18, week:3, tags:['prototype'], link:'#' },
+      { id:'r4', title:'Evaluating AI Products (UX)', type:'paper', length:9, week:6, tags:['UX','evaluation'], link:'#' },
+      { id:'r5', title:'Responsible AI in Practice', type:'article', length:14, week:7, tags:['ethics'], link:'#' }
+    ];
+
+    /** Materials schema
+     * id, title, type ('syllabus'|'slides'|'template'|'rubric'|'other'), link
+     */
+    const MATERIALS = [
+      { id:'m1', title:'Syllabus (PDF)', type:'syllabus', link:'#' },
+      { id:'m2', title:'Course Slides — Week 1', type:'slides', link:'#' },
+      { id:'m3', title:'PRD Template (Google Doc)', type:'template', link:'#' },
+      { id:'m4', title:'Usability Test Rubric', type:'rubric', link:'#' }
+    ];
+
+    /** Events schema
+     * id, title, date (YYYY-MM-DDTHH:mm), location, type ('class'|'office-hours'|'guest')
+     */
+    const EVENTS = [
+      { id:'e1', title:'Class Session — Week 3', date:'2025-09-10T18:30', location:'Room 202 / Zoom', type:'class' },
+      { id:'e2', title:'Office Hours', date:'2025-09-11T15:00', location:'Room 410', type:'office-hours' },
+      { id:'e3', title:'Guest Talk: AI & Product', date:'2025-09-18T18:30', location:'Auditorium', type:'guest' }
+    ];
+
+    // ======= Utilities =======
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    const fmtDate = (iso) => new Date(iso);
+    const fmtDateStr = (iso) => {
+      const d = fmtDate(iso);
+      return d.toLocaleString([], { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    };
+    const daysUntil = (iso) => Math.ceil((fmtDate(iso) - new Date()) / (1000*60*60*24));
+
+    // Local storage for completion state
+    const LS_KEY = 'genai_course_completed_ids';
+    const loadCompleted = () => new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]'));
+    const saveCompleted = (set) => localStorage.setItem(LS_KEY, JSON.stringify(Array.from(set)));
+
+    // ======= Tabs (ARIA + keyboard) =======
+    function initTabs(){
+      const tabs = $$("[role=tab]");
+      const panels = $$("[role=tabpanel]");
+      function activate(tab){
+        tabs.forEach(t=>{
+          const selected = t===tab;
+          t.setAttribute('aria-selected', selected);
+          $("#"+t.getAttribute('aria-controls')).setAttribute('aria-hidden', !selected);
+        });
+        tab.focus();
+      }
+      tabs.forEach(t=>{
+        t.addEventListener('click', ()=>activate(t));
+        t.addEventListener('keydown', (e)=>{
+          const idx = tabs.indexOf(t);
+          if(e.key==='ArrowRight'){ e.preventDefault(); activate(tabs[(idx+1)%tabs.length]); }
+          if(e.key==='ArrowLeft'){ e.preventDefault(); activate(tabs[(idx-1+tabs.length)%tabs.length]); }
+          if(e.key==='Home'){ e.preventDefault(); activate(tabs[0]); }
+          if(e.key==='End'){ e.preventDefault(); activate(tabs[tabs.length-1]); }
+        });
+      });
+    }
+
+    // ======= Render: Upcoming Deadlines =======
+    function renderUpcoming(){
+      const upcoming = [...ASSIGNMENTS]
+        .filter(a=>fmtDate(a.due) >= new Date())
+        .sort((a,b)=>fmtDate(a.due)-fmtDate(b.due))
+        .slice(0,3);
+      const ul = $('#upcoming-list');
+      ul.innerHTML = '';
+      if(upcoming.length===0){ ul.innerHTML = '<li class="meta">No upcoming deadlines 🎉</li>'; return; }
+      for(const a of upcoming){
+        const dLeft = daysUntil(a.due);
+        const urgency = dLeft <= 2 ? 'amber' : 'green';
+        const li = document.createElement('li');
+        li.className = 'row';
+        li.innerHTML = `
+          <h3>${a.title}</h3>
+          <div class="meta">
+            <span class="badge ${urgency}" aria-label="Due ${fmtDateStr(a.due)}">Due: ${fmtDateStr(a.due)}</span>
+            <span class="badge gray" aria-label="Weight ${a.weight} percent">Weight: ${a.weight}%</span>
+            <span class="tags">${a.tags.map(t=>`<span class="pill" aria-label="Tag ${t}">${t}</span>`).join(' ')}</span>
+          </div>
+        `;
+        ul.appendChild(li);
+      }
+      // Timezone display
+      $('#tz').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
+    // ======= Render: Progress =======
+    function renderProgress(){
+      const completed = loadCompleted();
+      const total = ASSIGNMENTS.length;
+      const done = ASSIGNMENTS.filter(a=>completed.has(a.id)).length;
+      const pct = total? Math.round((done/total)*100) : 0;
+      $('#progress-fill').style.width = pct + '%';
+      $('#progress-text').textContent = pct + '%';
+      $('#progress-meta').textContent = `${done} of ${total} assignments marked complete`;
+    }
+
+    // ======= Render: Assignments (search/filter/sort) =======
+    const ALL_TAGS = Array.from(new Set(ASSIGNMENTS.flatMap(a=>a.tags))).sort();
+
+    function setupTagFilters(){
+      const wrap = $('#tag-options');
+      wrap.innerHTML = '';
+      for(const t of ALL_TAGS){
+        const id = `tag-${t.replace(/\s+/g,'-')}`;
+        const label = document.createElement('label');
+        label.className = 'pill';
+        label.innerHTML = `<input type="checkbox" value="${t}" aria-label="Filter by tag ${t}" /> ${t}`;
+        wrap.appendChild(label);
+      }
+      wrap.addEventListener('change', renderAssignments);
+    }
+
+    function getActiveTags(){
+      return Array.from($('#tag-options').querySelectorAll('input[type=checkbox]:checked')).map(i=>i.value);
+    }
+
+    function activeTagCount(){
+      const n = getActiveTags().length; $('#active-tag-count').textContent = `${n} ${n===1?'tag':'tags'}`;
+    }
+
+    function renderAssignments(){
+      activeTagCount();
+      const q = $('#search-assignments').value.trim().toLowerCase();
+      const tags = new Set(getActiveTags());
+      const sort = $('#sort-assignments').value;
+      const completed = loadCompleted();
+
+      let items = ASSIGNMENTS.filter(a=>{
+        const matchQ = !q || a.title.toLowerCase().includes(q) || a.description.toLowerCase().includes(q);
+        const matchTags = tags.size===0 || a.tags.some(t=>tags.has(t));
+        return matchQ && matchTags;
+      });
+      items.sort((a,b)=>{
+        if(sort==='due') return fmtDate(a.due)-fmtDate(b.due);
+        if(sort==='title') return a.title.localeCompare(b.title);
+        if(sort==='weight') return b.weight-a.weight;
+        if(sort==='status') return (completed.has(a.id)?1:0) - (completed.has(b.id)?1:0);
+        return 0;
+      });
+
+      $('#assignment-count').textContent = `${items.length} matching assignment${items.length===1?'':'s'}`;
+
+      const ul = $('#assignments-list'); ul.innerHTML = '';
+      for(const a of items){
+        const isDone = completed.has(a.id);
+        const statusBadge = isDone ? `<span class="badge green" aria-label="Completed">Completed</span>` : `<span class="badge amber" aria-label="Not completed">Pending</span>`;
+        const li = document.createElement('li'); li.className = 'row';
+        li.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:.75rem;">
+            <div style="flex:1 1 auto;">
+              <h3>${a.title}</h3>
+              <div class="meta">
+                <span class="badge gray" aria-label="Due ${fmtDateStr(a.due)}">Due: ${fmtDateStr(a.due)}</span>
+                <span class="badge gray" aria-label="Weight ${a.weight} percent">Weight: ${a.weight}%</span>
+                ${statusBadge}
+              </div>
+              <p style="margin:.5rem 0 .25rem;">${a.description}</p>
+              <div class="tags">${a.tags.map(t=>`<span class="pill" aria-label="Tag ${t}">${t}</span>`).join(' ')}</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:.5rem; align-items:flex-end;">
+              <label class="pill" style="cursor:pointer;">
+                <input type="checkbox" ${isDone?'checked':''} aria-label="Mark ${a.title} complete" data-complete="${a.id}" /> Complete
+              </label>
+              ${a.link?`<a class="pill" href="${a.link}" aria-label="Open details for ${a.title}">Open</a>`:''}
+            </div>
+          </div>
+        `;
+        ul.appendChild(li);
+      }
+
+      // bind completion toggles
+      ul.querySelectorAll('input[data-complete]').forEach(chk=>{
+        chk.addEventListener('change', (e)=>{
+          const id = e.target.getAttribute('data-complete');
+          const set = loadCompleted();
+          if(e.target.checked) set.add(id); else set.delete(id);
+          saveCompleted(set);
+          renderProgress();
+          renderAssignments();
+        });
+      });
+    }
+
+    // ======= Render: Readings =======
+    function renderReadings(){
+      const q = $('#search-readings').value.trim().toLowerCase();
+      const sort = $('#sort-readings').value;
+      let items = READINGS.filter(r=>!q || r.title.toLowerCase().includes(q) || r.tags.some(t=>t.toLowerCase().includes(q)));
+      items.sort((a,b)=>{
+        if(sort==='week') return a.week - b.week;
+        if(sort==='title') return a.title.localeCompare(b.title);
+        if(sort==='length') return a.length - b.length;
+        return 0;
+      });
+      const ul = $('#readings-list'); ul.innerHTML='';
+      for(const r of items){
+        const li = document.createElement('li'); li.className='row';
+        li.innerHTML = `
+          <h3>${r.title}</h3>
+          <div class="meta">
+            <span class="badge gray" aria-label="Week ${r.week}">Week ${r.week}</span>
+            <span class="badge gray" aria-label="Type ${r.type}">${r.type}</span>
+            <span class="badge gray" aria-label="Length ${r.length}">Length: ${r.length}${r.type==='video'?' min':' pages'}</span>
+          </div>
+          <div class="tags">${r.tags.map(t=>`<span class=\"pill\">${t}</span>`).join(' ')}</div>
+          <p style="margin:.5rem 0 0;">
+            <a href="${r.link}" aria-label="Open reading: ${r.title}">Open link</a>
+          </p>
+        `;
+        ul.appendChild(li);
+      }
+    }
+
+    // ======= Render: Materials =======
+    function renderMaterials(){
+      const ul = $('#materials-list'); ul.innerHTML='';
+      for(const m of MATERIALS){
+        const li = document.createElement('li'); li.className='row';
+        li.innerHTML = `
+          <h3>${m.title}</h3>
+          <div class="meta"><span class="badge gray">${m.type}</span></div>
+          <p style="margin:.5rem 0 0;"><a href="${m.link}" aria-label="Open ${m.title}">Open</a></p>
+        `;
+        ul.appendChild(li);
+      }
+    }
+
+    // ======= Render: Events (Overview) =======
+    function renderEvents(){
+      const ul = $('#events-list'); ul.innerHTML='';
+      const sorted = [...EVENTS].sort((a,b)=>fmtDate(a.date)-fmtDate(b.date));
+      for(const e of sorted){
+        const li = document.createElement('li'); li.className='row';
+        const googleCalUrl = (()=>{
+          const start = new Date(e.date);
+          const end = new Date(start.getTime()+60*60*1000); // default 1h
+          const fmt = d=>d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+          const params = new URLSearchParams({
+            action:'TEMPLATE', text: e.title, dates: `${fmt(start)}/${fmt(end)}`,
+            location: e.location, details: 'Course event from GEN AI & Product Studio'
+          });
+          return `https://calendar.google.com/calendar/render?${params.toString()}`;
+        })();
+        li.innerHTML = `
+          <h3>${e.title}</h3>
+          <div class="meta">
+            <span class="badge gray">${fmtDateStr(e.date)}</span>
+            <span class="badge gray">${e.location}</span>
+            <span class="badge ${e.type==='class'?'green': e.type==='guest'?'amber':'gray'}">${e.type}</span>
+          </div>
+          <p style="margin:.5rem 0 0;"><a href="${googleCalUrl}" target="_blank" rel="noopener" aria-label="Add ${e.title} to Google Calendar (opens in new tab)">Add to Google Calendar ↗</a></p>
+        `;
+        ul.appendChild(li);
+      }
+    }
+
+    // ======= iCal Export =======
+    function generateICS(){
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//GEN AI & Product Studio//Course Deadlines//EN'
+      ];
+      for(const a of ASSIGNMENTS){
+        const start = new Date(a.due);
+        const dt = start.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+        const uid = `${a.id}@genai-course`; // simple UID
+        lines.push('BEGIN:VEVENT');
+        lines.push(`UID:${uid}`);
+        lines.push(`DTSTAMP:${dt}`);
+        lines.push(`DTSTART:${dt}`);
+        lines.push(`SUMMARY:${a.title} (Due)`);
+        lines.push(`DESCRIPTION:Weight ${a.weight}% | ${a.description.replace(/\n/g,' ')}`);
+        lines.push('END:VEVENT');
+      }
+      lines.push('END:VCALENDAR');
+      return lines.join('\r\n');
+    }
+
+    function downloadICS(){
+      const blob = new Blob([generateICS()], { type:'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'GEN-AI-Product-Deadlines.ics'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ======= Init =======
+    function init(){
+      // Header
+      $('#course-title').textContent = COURSE.title;
+      $('#course-term').textContent = COURSE.term;
+
+      initTabs();
+      renderUpcoming();
+      renderProgress();
+      setupTagFilters();
+      renderAssignments();
+      renderReadings();
+      renderMaterials();
+      renderEvents();
+
+      // Bind controls
+      $('#search-assignments').addEventListener('input', renderAssignments);
+      $('#sort-assignments').addEventListener('change', renderAssignments);
+      $('#search-readings').addEventListener('input', renderReadings);
+      $('#sort-readings').addEventListener('change', renderReadings);
+      $('#download-ics').addEventListener('click', downloadICS);
+
+      // Update active tag count on toggle of details open/close
+      $('#filter-tags').addEventListener('toggle', activeTagCount);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
